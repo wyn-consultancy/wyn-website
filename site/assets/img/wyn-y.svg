@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 159 171">
+  <!-- The Y from the WYN logo, traced from the original artwork (159 x 171 units) -->
+  <mask id="cut">
+    <rect width="159" height="171" fill="#fff"/>
+    <polyline points="44,20 79.5,76.8 115,20" fill="none" stroke="#000" stroke-width="2.2" stroke-linejoin="miter"/>
+  </mask>
+  <path d="M0 0H158L95 102V171H62V102Z" fill="#fff" mask="url(#cut)"/>
+</svg>

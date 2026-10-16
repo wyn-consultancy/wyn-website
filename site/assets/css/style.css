@@ -788,25 +788,43 @@ p { margin: 0 0 1em; }
 .hero-proof ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 26px; }
 .hero-proof li { font-family: var(--font-display); text-transform: uppercase; font-size: 1.15rem; letter-spacing: 0.01em; }
 
-/* Background motif: a giant, cropped Y from the WYN logo replaces the circles */
-.blobs span:first-child {
+/* Background motif: two overlapping glass Ys from the WYN logo (vector).
+   Sized off the section height so only the V shows; the stems fall below the fold.
+   The top shape blurs the one beneath where they overlap, for a liquid-glass feel. */
+.blobs span {
   border-radius: 0;
-  width: min(62vw, 820px);
-  height: auto;
+  width: auto;
   aspect-ratio: 159 / 171;
   left: auto;
-  right: -9vw;
-  top: -6%;
-  opacity: 0.5;
-  background: var(--red-soft);
-  -webkit-mask: url("/assets/img/wyn-y.png") center / contain no-repeat;
-  mask: url("/assets/img/wyn-y.png") center / contain no-repeat;
-  animation-duration: 34s;
+  opacity: 1;
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05) 46%, rgba(255, 255, 255, 0.11));
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-mask: url("/assets/img/wyn-y.svg") top / 100% 100% no-repeat;
+  mask: url("/assets/img/wyn-y.svg") top / 100% 100% no-repeat;
 }
-.blobs span:nth-child(2) { display: none; }
-.hero--center .blobs span:first-child { right: -14vw; top: -18%; }
+.blobs span::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("/assets/img/wyn-y-edge.svg") top / 100% 100% no-repeat;
+}
+.blobs span:nth-child(1) { display: block; width: auto; left: auto; height: 175%; top: -10%; right: -12%; animation: v-drift-1 30s ease-in-out infinite alternate; }
+.blobs span:nth-child(2) { display: block; width: auto; left: auto; height: 135%; top: -34%; right: 21%; transform: rotate(-14deg); animation: v-drift-2 38s ease-in-out infinite alternate; }
+@keyframes v-drift-1 { from { transform: translate(0, 0); } to { transform: translate(-4vw, 3%); } }
+@keyframes v-drift-2 { from { transform: rotate(-14deg) translate(0, 0); } to { transform: rotate(-9deg) translate(3vw, -2%); } }
+.hero--center .blobs span:nth-child(1) { right: -18%; }
+.hero--center .blobs span:nth-child(2) { right: auto; left: -16%; top: -26%; transform: rotate(12deg); animation-name: v-drift-2b; }
+@keyframes v-drift-2b { from { transform: rotate(12deg) translate(0, 0); } to { transform: rotate(8deg) translate(-3vw, -2%); } }
 @media (max-width: 760px) {
-  .blobs span:first-child { width: 120vw; right: -55vw; top: 2%; opacity: 0.35; }
+  .blobs span:nth-child(1) { height: 120%; right: -55%; top: -4%; }
+  .blobs span:nth-child(2) { height: 95%; right: auto; left: -50%; top: -22%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .blobs span:nth-child(n) { animation: none; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .blobs span { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(255, 255, 255, 0.08); }
 }
 
 /* Reading size: a touch larger on desktop, articles larger still */
