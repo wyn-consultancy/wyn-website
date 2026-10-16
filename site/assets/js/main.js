@@ -3,11 +3,14 @@
 // ---------------------------------------------------------------
 const SETTINGS = {
   email: 'wyn-consultancy@gmail.com',
-  // Cal.com booking link, e.g. 'https://cal.com/wyn/intro'. Empty = show email fallback.
-  calLink: '',
+  // Cal.com booking link. Empty = show email fallback.
+  calLink: 'https://cal.com/wyn-consultancy-5wpu62/intro',
   // Form service URLs (e.g. Formspree). Empty = forms open a pre-filled email instead.
   contactEndpoint: '',
   newsletterEndpoint: '',
+  // Tracking. Each only loads after the visitor accepts cookies. Empty = off, and no banner.
+  ga4Id: '',        // Google Analytics 4 measurement ID, e.g. 'G-ABC123XYZ'
+  metaPixelId: '',  // Meta Pixel / dataset ID, e.g. '123456789012345'
 };
 
 // Mobile menu
@@ -66,19 +69,27 @@ if (contact) {
   });
 }
 
-// Booking calendar on the contact page
+// Booking calendar on the contact page (Cal.com's official inline embed)
 const booking = document.querySelector('[data-booking]');
 if (booking && SETTINGS.calLink) {
-  booking.innerHTML = `<iframe src="${SETTINGS.calLink}?embed=true&theme=light" title="Book an intro call" loading="lazy"></iframe>`;
-}
+  booking.classList.add('booking--live');
+  booking.innerHTML = `
+    <h2>Book an intro call</h2>
+    <p>Free, 20 minutes, on video. Pick a time that works for you.</p>
+    <div id="cal-inline"></div>
+    <p class="small-print">Calendar not loading? <a href="${SETTINGS.calLink}" target="_blank" rel="noopener">Open it on Cal.com</a>.</p>`;
 
-// Any "Book a call" link goes straight to the calendar once it exists
-if (SETTINGS.calLink) {
-  document.querySelectorAll('a[data-book]').forEach((a) => {
-    a.href = SETTINGS.calLink;
-    a.target = '_blank';
-    a.rel = 'noopener';
+  // Loader snippet from Cal.com's embed docs
+  (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if (typeof namespace === "string") { cal.ns[namespace] = cal.ns[namespace] || api; p(cal.ns[namespace], ar); p(cal, ["initNamespace", namespace]); } else p(cal, ar); return; } p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+
+  Cal("init", "intro", { origin: "https://app.cal.com" });
+  Cal.ns.intro("inline", {
+    elementOrSelector: "#cal-inline",
+    calLink: new URL(SETTINGS.calLink).pathname.slice(1),
+    config: { layout: "month_view", theme: "light" },
   });
+  Cal.ns.intro("ui", { theme: "light", layout: "month_view", cssVarsPerTheme: { light: { "cal-brand": "#7f0201" } } });
+  Cal.ns.intro("on", { action: "bookingSuccessful", callback: () => trackLead('intro-call') });
 }
 
 // Header turns translucent once the page scrolls
@@ -147,3 +158,108 @@ document.addEventListener('click', (e) => {
 window.addEventListener('pageshow', (e) => {
   if (e.persisted) root.classList.remove('wyn-leave', 'wyn-enter');
 });
+
+// ---------------------------------------------------------------
+// Cookie consent (UK GDPR / PECR).
+// Nothing non-essential loads until the visitor says yes. "Accept" and "Reject"
+// carry equal weight, and the choice can be changed any time from the footer.
+// The banner only appears once a tracking ID is set in SETTINGS.
+// ---------------------------------------------------------------
+const CONSENT_KEY = 'wyn-consent-v1';
+const tracking = { analytics: !!SETTINGS.ga4Id, marketing: !!SETTINGS.metaPixelId };
+
+function readConsent() {
+  try { return JSON.parse(localStorage.getItem(CONSENT_KEY)); } catch { return null; }
+}
+function saveConsent(c) {
+  try { localStorage.setItem(CONSENT_KEY, JSON.stringify({ ...c, date: new Date().toISOString() })); } catch {}
+}
+
+function loadScript(src) {
+  const s = document.createElement('script');
+  s.async = true;
+  s.src = src;
+  document.head.append(s);
+}
+
+function loadAnalytics() {
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function () { dataLayer.push(arguments); };
+  gtag('js', new Date());
+  gtag('config', SETTINGS.ga4Id, { anonymize_ip: true });
+  loadScript(`https://www.googletagmanager.com/gtag/js?id=${SETTINGS.ga4Id}`);
+}
+
+function loadMetaPixel() {
+  if (window.fbq) return;
+  const fbq = window.fbq = function () { fbq.callMethod ? fbq.callMethod.apply(fbq, arguments) : fbq.queue.push(arguments); };
+  if (!window._fbq) window._fbq = fbq;
+  fbq.push = fbq; fbq.loaded = true; fbq.version = '2.0'; fbq.queue = [];
+  loadScript('https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', SETTINGS.metaPixelId);
+  fbq('track', 'PageView');
+}
+
+function applyConsent(c) {
+  if (c.analytics && tracking.analytics) loadAnalytics();
+  if (c.marketing && tracking.marketing) loadMetaPixel();
+}
+
+// Conversion events, only sent if the matching tool was allowed to load
+function trackLead(kind) {
+  if (window.gtag) gtag('event', 'generate_lead', { method: kind });
+  if (window.fbq) fbq('track', 'Lead', { content_name: kind });
+}
+document.addEventListener('submit', (e) => {
+  const kind = e.target.dataset && e.target.dataset.form;
+  if (kind) trackLead(kind);
+});
+
+function showBanner(open = false) {
+  document.querySelector('.cookie-banner')?.remove();
+  const current = readConsent() || { analytics: false, marketing: false };
+  const el = document.createElement('div');
+  el.className = 'cookie-banner';
+  el.setAttribute('role', 'dialog');
+  el.setAttribute('aria-labelledby', 'cookie-title');
+  el.innerHTML = `
+    <h2 id="cookie-title">Cookies</h2>
+    <p>We'd like to use cookies to understand how people use this site and to measure our ads. Nothing is set unless you say yes. <a href="/privacy">Privacy and cookies</a></p>
+    <form class="cookie-options" ${open ? '' : 'hidden'}>
+      ${tracking.analytics ? `<label><input type="checkbox" name="analytics" ${current.analytics ? 'checked' : ''}> <span><strong>Analytics</strong> Google Analytics: which pages are visited and how people find us.</span></label>` : ''}
+      ${tracking.marketing ? `<label><input type="checkbox" name="marketing" ${current.marketing ? 'checked' : ''}> <span><strong>Marketing</strong> Meta Pixel: measures and improves our ads on Instagram and Facebook.</span></label>` : ''}
+    </form>
+    <div class="cookie-actions">
+      <button type="button" class="btn btn--solid" data-c="accept">Accept all</button>
+      <button type="button" class="btn btn--solid" data-c="reject">Reject all</button>
+      <button type="button" class="cookie-manage" data-c="${open ? 'save' : 'manage'}">${open ? 'Save choices' : 'Choose'}</button>
+    </div>`;
+  document.body.append(el);
+
+  const close = (c) => {
+    const changedToOff = (current.analytics && !c.analytics) || (current.marketing && !c.marketing);
+    saveConsent(c);
+    el.remove();
+    if (changedToOff) location.reload(); // stop scripts that were already running
+    else applyConsent(c);
+  };
+  el.addEventListener('click', (e) => {
+    const action = e.target.closest('[data-c]')?.dataset.c;
+    if (action === 'accept') close({ analytics: true, marketing: true });
+    if (action === 'reject') close({ analytics: false, marketing: false });
+    if (action === 'manage') showBanner(true);
+    if (action === 'save') {
+      const f = el.querySelector('.cookie-options');
+      close({ analytics: !!f.analytics?.checked, marketing: !!f.marketing?.checked });
+    }
+  });
+}
+
+if (tracking.analytics || tracking.marketing) {
+  const c = readConsent();
+  if (c) applyConsent(c); else showBanner();
+  document.querySelectorAll('[data-cookie-settings]').forEach((b) => {
+    b.hidden = false;
+    b.addEventListener('click', () => showBanner(true));
+  });
+}

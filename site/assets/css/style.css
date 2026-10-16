@@ -654,3 +654,53 @@ p { margin: 0 0 1em; }
 @media (max-width: 760px) {
   .site-header.open { background: var(--red) !important; color: var(--off-white) !important; backdrop-filter: none; }
 }
+
+/* =========================================================
+   Cookie banner, booking embed, legal page
+   ========================================================= */
+.cookie-banner {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  z-index: 900;
+  width: min(440px, calc(100vw - 40px));
+  background: var(--off-white);
+  color: var(--black);
+  padding: 26px 26px 22px;
+  box-shadow: 0 18px 50px rgba(13, 13, 13, 0.28), 0 2px 8px rgba(13, 13, 13, 0.12);
+  border-top: 6px solid var(--red);
+  font-size: 14px;
+  animation: banner-in 500ms var(--ease-out) both;
+}
+@keyframes banner-in { from { opacity: 0; transform: translateY(16px); } }
+.cookie-banner h2 { font-size: 1.3rem; margin-bottom: 0.4em; }
+.cookie-banner p { margin-bottom: 1.1em; }
+.cookie-banner a { text-decoration: underline; }
+.cookie-options { display: grid; gap: 12px; margin-bottom: 1.2em; }
+.cookie-options[hidden] { display: none; }
+.cookie-options label { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
+.cookie-options input { margin-top: 3px; accent-color: var(--red); width: 16px; height: 16px; }
+.cookie-options strong { display: block; }
+.cookie-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.cookie-actions .btn { padding: 11px 18px; font-size: 13px; }
+.cookie-manage { background: none; border: 0; font: inherit; font-size: 13px; text-decoration: underline; cursor: pointer; padding: 8px; color: inherit; }
+@media (max-width: 480px) {
+  .cookie-banner { left: 10px; bottom: 10px; width: calc(100vw - 20px); padding: 22px 20px 18px; }
+}
+
+.footer-legal { display: inline-flex; flex-wrap: wrap; gap: 6px 16px; margin-left: 16px; }
+.footer-legal a, .footer-legal button { color: inherit; font: inherit; font-size: 13px; background: none; border: 0; padding: 0; cursor: pointer; text-decoration: none; }
+.footer-legal a:hover, .footer-legal button:hover { text-decoration: underline; }
+@media (max-width: 760px) { .footer-legal { margin: 8px 0 0; display: flex; } }
+
+.booking--live { padding: 32px 24px 16px; }
+#cal-inline { width: 100%; min-height: 560px; margin: 8px 0 4px; overflow: auto; }
+
+.legal { max-width: 720px; }
+.legal h2 { font-size: 1.5rem; margin-top: 2em; }
+.legal table { width: 100%; border-collapse: collapse; font-size: 15px; margin: 1em 0 1.5em; }
+.legal th, .legal td { text-align: left; padding: 12px 12px 12px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.legal th { font-family: var(--font-display); font-weight: 400; text-transform: uppercase; font-size: 13px; letter-spacing: 0.04em; }
+.legal a { text-decoration: underline; }
+.contact-grid .booking--live { grid-column: 1 / -1; }
+.contact-grid .booking--live ~ form { max-width: 640px; }
