@@ -788,26 +788,28 @@ p { margin: 0 0 1em; }
 .hero-proof ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 26px; }
 .hero-proof li { font-family: var(--font-display); text-transform: uppercase; font-size: 1.15rem; letter-spacing: 0.01em; }
 
-/* Background motif: two overlapping glass Ys from the WYN logo (vector).
-   Sized off the section height so only the V shows; the stems fall below the fold.
-   The top shape blurs the one beneath where they overlap, for a liquid-glass feel. */
+/* Background motif: two overlapping fluted-glass Ys from the WYN logo (vector).
+   Sized off the section height so only the V shows; the stems fall below the fold. */
 .blobs span {
   border-radius: 0;
   width: auto;
   aspect-ratio: 159 / 171;
   left: auto;
-  opacity: 1;
-  background: linear-gradient(155deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05) 46%, rgba(255, 255, 255, 0.11));
-  -webkit-backdrop-filter: blur(16px) saturate(150%);
-  backdrop-filter: blur(16px) saturate(150%);
+  opacity: 0.55;
+  /* Fluted (reeded) glass: soft near-horizontal slats, each lit on one edge and fading across,
+     over a faint top-to-bottom sheen. Kept low-contrast so it reads as texture, not a graphic. */
+  background:
+    repeating-linear-gradient(170deg,
+      rgba(255, 255, 255, 0.10) 0,
+      rgba(255, 255, 255, 0.03) 14px,
+      rgba(255, 255, 255, 0) 30px,
+      rgba(0, 0, 0, 0.05) 36px,
+      rgba(255, 255, 255, 0.10) 38px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.02) 70%);
+  -webkit-backdrop-filter: blur(6px) saturate(120%);
+  backdrop-filter: blur(6px) saturate(120%);
   -webkit-mask: url("/assets/img/wyn-y.svg") top / 100% 100% no-repeat;
   mask: url("/assets/img/wyn-y.svg") top / 100% 100% no-repeat;
-}
-.blobs span::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: url("/assets/img/wyn-y-edge.svg") top / 100% 100% no-repeat;
 }
 .blobs span:nth-child(1) { display: block; width: auto; left: auto; height: 175%; top: -10%; right: -12%; animation: v-drift-1 30s ease-in-out infinite alternate; }
 .blobs span:nth-child(2) { display: block; width: auto; left: auto; height: 135%; top: -34%; right: 21%; transform: rotate(-14deg); animation: v-drift-2 38s ease-in-out infinite alternate; }
@@ -824,7 +826,7 @@ p { margin: 0 0 1em; }
   .blobs span:nth-child(n) { animation: none; }
 }
 @media (prefers-reduced-transparency: reduce) {
-  .blobs span { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(255, 255, 255, 0.08); }
+  .blobs span { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(255, 255, 255, 0.05); }
 }
 
 /* Reading size: a touch larger on desktop, articles larger still */
