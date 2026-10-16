@@ -1,0 +1,5 @@
+# Private: strategy, pricing rationale and local tooling stay off GitHub
+strategy/
+.claude/
+WYN PNG.png
+.DS_Store
