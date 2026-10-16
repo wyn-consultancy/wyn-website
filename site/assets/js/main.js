@@ -42,7 +42,7 @@ async function post(endpoint, form, note, success, subject) {
     form.reset();
     note.textContent = success;
   } catch {
-    note.textContent = `Something went wrong. Please email ${SETTINGS.email}.`;
+    note.textContent = `Sorry, that didn't send. Please email ${SETTINGS.email} and we'll reply within two working days.`;
   } finally {
     if (button) button.disabled = false;
   }

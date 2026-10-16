@@ -602,8 +602,6 @@ p { margin: 0 0 1em; }
   color: var(--black);
   box-shadow: 0 1px 0 rgba(13, 13, 13, 0.08);
 }
-.site-header.scrolled .wrap { height: 68px; }
-.site-header .wrap { transition: height 300ms var(--ease-out); }
 @media (prefers-reduced-transparency: reduce) {
   .site-header.scrolled { background: var(--red); backdrop-filter: none; }
   .page--light-header .site-header.scrolled { background: var(--off-white); }
@@ -756,4 +754,79 @@ p { margin: 0 0 1em; }
   .srow { grid-template-columns: 1fr; gap: 10px; padding: 28px 16px; }
   .srow-end { text-align: left; display: flex; justify-content: space-between; align-items: baseline; margin-top: 6px; }
   .srow .from { margin: 0; }
+}
+
+/* =========================================================
+   Critique fixes (Oct 2026)
+   ========================================================= */
+
+/* Logo: the white WYN lettering, coloured by the header (off-white or black) */
+.logo { display: inline-flex; }
+.logo-mark {
+  display: block;
+  width: 88px;
+  aspect-ratio: 546 / 179;
+  background-color: currentColor;
+  -webkit-mask: url("/assets/img/wyn-wordmark.png") center / contain no-repeat;
+  mask: url("/assets/img/wyn-wordmark.png") center / contain no-repeat;
+}
+
+/* Mobile: keep "Book a call" visible next to the menu button */
+@media (max-width: 760px) {
+  .logo-mark { width: 74px; }
+  .site-header .wrap { grid-template-columns: auto 1fr auto auto; column-gap: 12px; }
+  .header-right { display: flex; grid-column: 3; }
+  .header-right .social { display: none; }
+  .btn--nav { padding: 9px 14px; font-size: 12px; }
+  .menu-toggle { grid-column: 4; }
+  .site-header.open .header-right { display: none; }
+}
+
+/* Hero proof line */
+.hero-proof { margin-top: 48px; }
+.hero-proof p { font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.8; margin: 0 0 12px; max-width: none; }
+.hero-proof ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 26px; }
+.hero-proof li { font-family: var(--font-display); text-transform: uppercase; font-size: 1.15rem; letter-spacing: 0.01em; }
+
+/* Background motif: a giant, cropped Y from the WYN logo replaces the circles */
+.blobs span:first-child {
+  border-radius: 0;
+  width: min(62vw, 820px);
+  height: auto;
+  aspect-ratio: 160 / 172;
+  left: auto;
+  right: -9vw;
+  top: -6%;
+  opacity: 0.5;
+  background: var(--red-soft);
+  -webkit-mask: url("/assets/img/wyn-y.png") center / contain no-repeat;
+  mask: url("/assets/img/wyn-y.png") center / contain no-repeat;
+  animation-duration: 34s;
+}
+.blobs span:nth-child(2) { display: none; }
+.hero--center .blobs span:first-child { right: -14vw; top: -18%; }
+@media (max-width: 760px) {
+  .blobs span:first-child { width: 120vw; right: -55vw; top: 2%; opacity: 0.35; }
+}
+
+/* Reading size: a touch larger on desktop, articles larger still */
+@media (min-width: 900px) {
+  body { font-size: 17px; }
+  .post { font-size: 18px; line-height: 1.7; }
+}
+
+/* Insights cards align left, like the rest of the site */
+.news-card { text-align: left; }
+
+/* Keyboard focus that shows on every background */
+:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+.hero :focus-visible, .section--red :focus-visible, .section--dark :focus-visible,
+.svc-band--dark :focus-visible, .site-footer :focus-visible, .site-header :focus-visible { outline-color: var(--peach); }
+.page--light-header .site-header :focus-visible { outline-color: var(--red); }
+.srow:focus-visible { outline-offset: -3px; }
+@media (max-width: 760px) {
+  .site-header.open .nav a.nav-cta-mobile {
+    font-family: var(--font-body); text-transform: uppercase; font-size: 14px; letter-spacing: 0.04em;
+    padding: 14px 24px; border: 1px solid var(--off-white); align-self: flex-start; margin-top: 12px;
+  }
 }
