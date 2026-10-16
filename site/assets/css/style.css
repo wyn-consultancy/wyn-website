@@ -7,8 +7,8 @@
   --dark: #191a1a;
   --black: #0d0d0d;
   --off-white: #fafaf9;
-  --peach: #f3d1a5;         /* pricing cards */
-  --clay: #c58a6a;          /* pricing card top strip */
+  --peach: #ffc48c;         /* apricot: cards, bands, pricing */
+  --clay: #ee9555;          /* deeper apricot: top stripes */
   --line: rgba(13, 13, 13, 0.35);
 
   --font-display: "Anton", Impact, sans-serif;
