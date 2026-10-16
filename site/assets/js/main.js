@@ -224,7 +224,7 @@ function showBanner(open = false) {
   el.setAttribute('aria-labelledby', 'cookie-title');
   el.innerHTML = `
     <h2 id="cookie-title">Cookies</h2>
-    <p>We'd like to use cookies to understand how people use this site and to measure our ads. Nothing is set unless you say yes. <a href="/privacy">Privacy and cookies</a></p>
+    <p>We'd like to use cookies to understand how people use this site and to measure our ads. Nothing is set unless you say yes. <a href="/privacy/">Privacy and cookies</a></p>
     <form class="cookie-options" ${open ? '' : 'hidden'}>
       ${tracking.analytics ? `<label><input type="checkbox" name="analytics" ${current.analytics ? 'checked' : ''}> <span><strong>Analytics</strong> Google Analytics: which pages are visited and how people find us.</span></label>` : ''}
       ${tracking.marketing ? `<label><input type="checkbox" name="marketing" ${current.marketing ? 'checked' : ''}> <span><strong>Marketing</strong> Meta Pixel: measures and improves our ads on Instagram and Facebook.</span></label>` : ''}
