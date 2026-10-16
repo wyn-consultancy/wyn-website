@@ -808,9 +808,10 @@ p { margin: 0 0 1em; }
 }
 .blobs span:nth-child(2) { display: none; }
 @keyframes v-drift {
-  /* Grows from its centre to 130% and back to the resting size, where the whole V is visible */
-  from { transform: translateX(0) scale(1); }
-  to   { transform: translateX(-5vw) scale(1.3); }
+  /* Pure proportional resize from the centre (like Option+Shift in a design tool):
+     every side grows out together to 130%, then returns to rest, where the V's tip sits on the section edge */
+  from { transform: scale(1); }
+  to   { transform: scale(1.3); }
 }
 @media (max-width: 760px) {
   .blobs span:nth-child(1) { right: -90%; opacity: 0.4; }
