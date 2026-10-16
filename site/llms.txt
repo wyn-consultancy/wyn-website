@@ -18,6 +18,10 @@
 
 - [About Jules](https://wyn-consultancy.com/about/): founder background and approach
 
+## Guides
+
+- [The agency AI adoption checklist](https://wyn-consultancy.com/guides/agency-ai-adoption-checklist/): free 8-page guide, 20 questions to answer before rolling out an AI tool
+
 ## Insights
 
 - [Why The "Tool-First" Strategy is Failing?](https://wyn-consultancy.com/insights/why-the-tool-first-strategy-is-failing/)

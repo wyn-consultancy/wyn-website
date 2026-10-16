@@ -77,6 +77,28 @@ if (contact) {
   });
 }
 
+// Guide downloads: details go to WYN (via the contact form service), then the download opens
+document.querySelectorAll('form[data-form="guide"]').forEach((form) => {
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const note = form.querySelector('.note');
+    const ready = form.parentElement.querySelector('.guide-ready');
+    const button = form.querySelector('button[type="submit"]');
+    const data = new FormData(form);
+    data.append('_subject', `Guide download: ${form.dataset.guide}`);
+    data.append('page', location.pathname);
+    button.disabled = true; note.textContent = 'Preparing your guide…';
+    try {
+      const res = await fetch(SETTINGS.contactEndpoint, { method: 'POST', headers: { Accept: 'application/json' }, body: data });
+      if (!res.ok) throw new Error();
+      form.hidden = true; ready.hidden = false; ready.querySelector('a')?.focus();
+    } catch {
+      button.disabled = false;
+      note.textContent = `Sorry, that didn't go through. Please try again, or email ${SETTINGS.email} and we'll send it over.`;
+    }
+  });
+});
+
 // Booking calendar on the contact page (Cal.com's official inline embed)
 const booking = document.querySelector('[data-booking]');
 if (booking && SETTINGS.calLink) {
