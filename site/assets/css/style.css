@@ -7,8 +7,8 @@
   --dark: #191a1a;
   --black: #0d0d0d;
   --off-white: #fafaf9;
-  --peach: #ffc48c;         /* apricot: cards, bands, pricing */
-  --clay: #ee9555;          /* deeper apricot: top stripes */
+  --peach: #ffcdaa;         /* fresh peach: cards, bands, pricing */
+  --clay: #f2a07b;          /* deeper peach: top stripes */
   --line: rgba(13, 13, 13, 0.35);
 
   --font-display: "Anton", Impact, sans-serif;
@@ -308,7 +308,7 @@ p { margin: 0 0 1em; }
 
 /* ---------- Footer ---------- */
 
-.site-footer { background: var(--red); color: var(--off-white); padding: 56px 0; }
+.site-footer { background: var(--black); color: var(--off-white); padding: 56px 0; }
 .site-footer .wrap {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
