@@ -765,7 +765,7 @@ p { margin: 0 0 1em; }
 .logo-mark {
   display: block;
   width: 88px;
-  aspect-ratio: 546 / 179;
+  aspect-ratio: 545 / 177;
   background-color: currentColor;
   -webkit-mask: url("/assets/img/wyn-wordmark.png") center / contain no-repeat;
   mask: url("/assets/img/wyn-wordmark.png") center / contain no-repeat;
@@ -793,7 +793,7 @@ p { margin: 0 0 1em; }
   border-radius: 0;
   width: min(62vw, 820px);
   height: auto;
-  aspect-ratio: 160 / 172;
+  aspect-ratio: 159 / 171;
   left: auto;
   right: -9vw;
   top: -6%;
