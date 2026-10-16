@@ -803,10 +803,15 @@ p { margin: 0 0 1em; }
   background: var(--red-soft);
   -webkit-mask: url("/assets/img/wyn-v.svg") top / 100% 100% no-repeat;
   mask: url("/assets/img/wyn-v.svg") top / 100% 100% no-repeat;
-  animation: v-drift 30s ease-in-out infinite alternate;
+  transform-origin: 50.3% 100%;
+  animation: v-drift 24s ease-in-out infinite alternate;
 }
 .blobs span:nth-child(2) { display: none; }
-@keyframes v-drift { from { transform: translateX(0); } to { transform: translateX(-5vw); } }
+@keyframes v-drift {
+  /* Grows slowly to 130% and back to its resting size, scaling from the inner V's tip on the bottom edge */
+  from { transform: translateX(0) scale(1); }
+  to   { transform: translateX(-5vw) scale(1.3); }
+}
 @media (max-width: 760px) {
   .blobs span:nth-child(1) { right: -90%; opacity: 0.4; }
 }
