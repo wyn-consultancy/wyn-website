@@ -726,3 +726,34 @@ p { margin: 0 0 1em; }
   letter-spacing: -0.01em;
 }
 .svc-band-intro--long h2 { font-size: clamp(2.6rem, 4.6vw, 3.8rem); line-height: 0.98; }
+
+/* =========================================================
+   Home: Advise / Train / Build as stacked rows
+   ========================================================= */
+.srows { border-top: 1px solid var(--line); }
+.srow {
+  display: grid;
+  grid-template-columns: 3.2fr 4fr 2fr;
+  gap: 32px;
+  align-items: center;
+  padding: 34px 24px;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  color: var(--black);
+  transition: background-color 350ms var(--ease-out), color 350ms var(--ease-out);
+}
+.srow h3 { font-size: clamp(3rem, 6vw, 5.2rem); line-height: 0.9; margin: 0; }
+.srow-mid p { margin: 0 0 0.4em; font-size: 1.05rem; }
+.srow-mid small { font-size: 14px; opacity: 0.75; }
+.srow-end { text-align: right; }
+.srow .from { display: block; font-family: var(--font-display); text-transform: uppercase; font-size: 1.3rem; color: var(--red); margin-bottom: 6px; transition: color 350ms var(--ease-out); }
+.srow .go { font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; }
+.srow-arrow { width: 18px; height: 18px; vertical-align: -4px; margin-left: 6px; transition: transform 350ms var(--ease-out); }
+.srow:hover, .srow:focus-visible { background: var(--red); color: var(--off-white); }
+.srow:hover .from, .srow:focus-visible .from { color: var(--peach); }
+.srow:hover .srow-arrow, .srow:focus-visible .srow-arrow { transform: translateX(4px); }
+@media (max-width: 860px) {
+  .srow { grid-template-columns: 1fr; gap: 10px; padding: 28px 16px; }
+  .srow-end { text-align: left; display: flex; justify-content: space-between; align-items: baseline; margin-top: 6px; }
+  .srow .from { margin: 0; }
+}

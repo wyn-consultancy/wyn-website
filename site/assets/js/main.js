@@ -109,7 +109,7 @@ window.addEventListener('scroll', onScroll, { passive: true });
 // staggered slightly. Skipped entirely for reduced motion.
 if (!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
   const targets = document.querySelectorAll([
-    '.panel-card', '.svc-card', '.steps li', '.features > div', '.news-card', '.offer',
+    '.panel-card', '.svc-card', '.srow', '.steps li', '.features > div', '.news-card', '.offer',
   ].join(','));
 
   const io = new IntersectionObserver((entries) => {
