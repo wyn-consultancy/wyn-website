@@ -2,12 +2,12 @@
 // Settings. Fill these in during setup; the site works without them.
 // ---------------------------------------------------------------
 const SETTINGS = {
-  email: 'wyn-consultancy@gmail.com',
+  email: 'wynconsultancy@gmail.com',
   // Cal.com booking link. Empty = show email fallback.
   calLink: 'https://cal.com/wyn-consultancy-5wpu62/intro',
   // Form service URLs (e.g. Formspree). Empty = forms open a pre-filled email instead.
-  contactEndpoint: '',
-  newsletterEndpoint: '',
+  contactEndpoint: 'https://formspree.io/f/xqpewjgv',
+  newsletterEndpoint: 'https://formspree.io/f/xyeklvlg',
   // Tracking. Each only loads after the visitor accepts cookies. Empty = off, and no banner.
   ga4Id: 'G-KZLNQTWZ6S',        // Google Analytics 4 measurement ID, e.g. 'G-ABC123XYZ'
   metaPixelId: '1665031928662954',  // Meta Pixel / dataset ID, e.g. '123456789012345'
@@ -29,14 +29,22 @@ function mailto(subject, body) {
   window.location.href = `mailto:${SETTINGS.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
-async function post(endpoint, form, note, success) {
+async function post(endpoint, form, note, success, subject) {
+  const button = form.querySelector('button[type="submit"]');
+  const data = new FormData(form);
+  data.append('_subject', subject);
+  data.append('page', location.pathname);
+  if (button) button.disabled = true;
+  note.textContent = 'Sending…';
   try {
-    const res = await fetch(endpoint, { method: 'POST', headers: { Accept: 'application/json' }, body: new FormData(form) });
+    const res = await fetch(endpoint, { method: 'POST', headers: { Accept: 'application/json' }, body: data });
     if (!res.ok) throw new Error();
     form.reset();
     note.textContent = success;
   } catch {
     note.textContent = `Something went wrong. Please email ${SETTINGS.email}.`;
+  } finally {
+    if (button) button.disabled = false;
   }
 }
 
@@ -49,7 +57,7 @@ document.querySelectorAll('form[data-form="newsletter"]').forEach((form) => {
       mailto('Newsletter sign-up', `Please add ${form.email.value.trim()} to the WYN newsletter.`);
       return;
     }
-    post(SETTINGS.newsletterEndpoint, form, note, 'Thank you! You’re on the list.');
+    post(SETTINGS.newsletterEndpoint, form, note, 'Thank you! You’re on the list.', 'New newsletter sign-up (wyn-consultancy.com)');
   });
 });
 
@@ -65,7 +73,7 @@ if (contact) {
         `Name: ${f.name.value}\nCompany: ${f.company.value}\nInterested in: ${f.interest.value}\n\n${f.message.value}`);
       return;
     }
-    post(SETTINGS.contactEndpoint, contact, note, 'Thanks, your message is in. We’ll be in touch soon.');
+    post(SETTINGS.contactEndpoint, contact, note, 'Thanks, your message is in. We’ll be in touch soon.', `New enquiry: ${contact.elements.interest.value}`);
   });
 }
 
