@@ -10,7 +10,7 @@ const SETTINGS = {
   newsletterEndpoint: '',
   // Tracking. Each only loads after the visitor accepts cookies. Empty = off, and no banner.
   ga4Id: '',        // Google Analytics 4 measurement ID, e.g. 'G-ABC123XYZ'
-  metaPixelId: '',  // Meta Pixel / dataset ID, e.g. '123456789012345'
+  metaPixelId: '1665031928662954',  // Meta Pixel / dataset ID, e.g. '123456789012345'
 };
 
 // Mobile menu
