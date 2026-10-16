@@ -6,14 +6,102 @@
   <meta name="robots" content="noindex, nofollow, noarchive">
   <title>WYN</title>
   <link rel="icon" href="/assets/img/favicon.ico">
-  <meta http-equiv="refresh" content="0; url=https://claude.ai/artifact/6ww1x35gTwmJ6cgLPWQ7f5">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Epilogue:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #7f0201; color: #fafaf9; font: 16px/1.5 system-ui, sans-serif; text-align: center; padding: 24px; }
-    a { color: #ffcdaa; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #7f0201; color: #fafaf9; font: 16px/1.5 "Epilogue", system-ui, sans-serif; padding: 24px; }
+    form { width: min(360px, 100%); display: grid; gap: 14px; }
+    .mark { width: 92px; aspect-ratio: 545 / 177; background: #fafaf9; -webkit-mask: url("/assets/img/wyn-wordmark.png") center / contain no-repeat; mask: url("/assets/img/wyn-wordmark.png") center / contain no-repeat; margin-bottom: 8px; }
+    label { font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.85; }
+    input[type=password] { width: 100%; padding: 13px 14px; font: inherit; border: 0; border-radius: 0; background: #fafaf9; color: #0d0d0d; }
+    .row { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+    button { font: inherit; text-transform: uppercase; letter-spacing: 0.05em; font-size: 14px; padding: 12px 18px; border: 0; background: #ffcdaa; color: #0d0d0d; cursor: pointer; }
+    button.alt { background: transparent; color: #ffcdaa; box-shadow: inset 0 0 0 1px #ffcdaa; }
+    button:disabled { opacity: 0.6; cursor: wait; }
+    .note { min-height: 1.5em; font-size: 14px; color: #ffcdaa; margin: 0; }
+    .ask { display: grid; gap: 12px; }
+    .ask p { margin: 0; }
+    :focus-visible { outline: 2px solid #ffcdaa; outline-offset: 2px; }
   </style>
 </head>
 <body>
-  <p>Taking you to the studio… <a href="https://claude.ai/artifact/6ww1x35gTwmJ6cgLPWQ7f5">Continue</a></p>
-  <script>location.replace("https://claude.ai/artifact/6ww1x35gTwmJ6cgLPWQ7f5");</script>
+  <form id="gate" autocomplete="on">
+    <div class="mark" role="img" aria-label="WYN"></div>
+    <label for="pw">Password</label>
+    <input id="pw" type="password" autocomplete="current-password" required autofocus>
+    <button id="go" type="submit">Enter</button>
+    <button id="bio" type="button" class="alt" hidden>Unlock with Face ID or fingerprint</button>
+    <p class="note" id="note" role="status"></p>
+  </form>
+  <script>
+    const DATA = { salt: "ylR7d5VdMPXkJkVFvAmFxg==", iv: "f4d31HEAD8A/2T8r", ct: "W3glpFxi0nxZpDZwSGq7w6owBi4sV1JadtnNldTcol9dVaO+eSBtNZpp/axXoX5rBV02Q34Yytq5a8DNPcAVmjg=", iterations: 600000 };
+    // Passkey unlock: the passkey's PRF output (a secret only Face ID / fingerprint releases) encrypts
+    // the link on this device. Nothing secret is stored in plain text; the password always works too.
+    const PK = "wyn-studio-passkey", PRF_SALT = new TextEncoder().encode("wyn-admin-passkey-v1");
+    const u8 = (b) => Uint8Array.from(atob(b), (c) => c.charCodeAt(0));
+    const b64 = (u) => btoa(String.fromCharCode(...new Uint8Array(u)));
+    const $ = (id) => document.getElementById(id), note = $("note"), bio = $("bio");
+    const rand = (n) => crypto.getRandomValues(new Uint8Array(n));
+    try { localStorage.removeItem("wyn-studio"); } catch {} // old plain "remember this device" entry
+    const load = () => { try { return JSON.parse(localStorage.getItem(PK)); } catch { return null; } };
+    const prfKey = (bytes) => crypto.subtle.importKey("raw", bytes, "AES-GCM", false, ["encrypt", "decrypt"]);
+
+    async function prfFrom(credId) {
+      const a = await navigator.credentials.get({ publicKey: { challenge: rand(32), userVerification: "required",
+        allowCredentials: credId ? [{ type: "public-key", id: u8(credId) }] : [],
+        extensions: { prf: { eval: { first: PRF_SALT } } } } });
+      const out = a.getClientExtensionResults().prf?.results?.first;
+      if (!out) throw new Error("no-prf");
+      return { key: await prfKey(out), id: b64(a.rawId) };
+    }
+
+    async function addPasskey(url) {
+      const c = await navigator.credentials.create({ publicKey: {
+        rp: { name: "WYN", id: location.hostname }, challenge: rand(32),
+        user: { id: rand(16), name: "WYN admin", displayName: "WYN admin" },
+        pubKeyCredParams: [{ type: "public-key", alg: -7 }, { type: "public-key", alg: -257 }],
+        authenticatorSelection: { residentKey: "preferred", userVerification: "required" },
+        extensions: { prf: { eval: { first: PRF_SALT } } } } });
+      if (!c.getClientExtensionResults().prf?.enabled) throw new Error("no-prf");
+      const { key } = await prfFrom(b64(c.rawId));
+      const iv = rand(12), ct = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, new TextEncoder().encode(url));
+      localStorage.setItem(PK, JSON.stringify({ id: b64(c.rawId), iv: b64(iv), ct: b64(ct) }));
+    }
+
+    if (load() && window.PublicKeyCredential) bio.hidden = false;
+    bio.addEventListener("click", async () => {
+      const s = load(); bio.disabled = true; note.textContent = "";
+      try {
+        const { key } = await prfFrom(s.id);
+        location.replace(new TextDecoder().decode(await crypto.subtle.decrypt({ name: "AES-GCM", iv: u8(s.iv) }, key, u8(s.ct))));
+      } catch { bio.disabled = false; note.textContent = "That didn't work. Use your password instead."; }
+    });
+
+    $("gate").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const btn = $("go"); btn.disabled = true; note.textContent = "Checking…";
+      let url;
+      try {
+        const base = await crypto.subtle.importKey("raw", new TextEncoder().encode($("pw").value), "PBKDF2", false, ["deriveKey"]);
+        const key = await crypto.subtle.deriveKey({ name: "PBKDF2", salt: u8(DATA.salt), iterations: DATA.iterations, hash: "SHA-256" }, base, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
+        url = new TextDecoder().decode(await crypto.subtle.decrypt({ name: "AES-GCM", iv: u8(DATA.iv) }, key, u8(DATA.ct)));
+      } catch { btn.disabled = false; note.textContent = "That password isn't right."; return; }
+      if (!load() && window.PublicKeyCredential) {
+        note.innerHTML = "";
+        const ask = document.createElement("div"); ask.className = "ask";
+        ask.innerHTML = "<p>Unlock with Face ID or fingerprint next time on this device?</p>";
+        const yes = document.createElement("button"); yes.type = "button"; yes.textContent = "Set up passkey";
+        const no = document.createElement("button"); no.type = "button"; no.className = "alt"; no.textContent = "Not now";
+        ask.append(yes, no); $("gate").replaceChildren(ask);
+        no.onclick = () => location.replace(url);
+        yes.onclick = async () => {
+          try { await addPasskey(url); location.replace(url); }
+          catch { ask.querySelector("p").textContent = "This browser couldn't set up a passkey. You can keep using your password."; yes.remove(); no.textContent = "Continue"; }
+        };
+        return;
+      }
+      location.replace(url);
+    });
+  </script>
 </body>
 </html>
