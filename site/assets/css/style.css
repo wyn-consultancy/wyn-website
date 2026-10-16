@@ -788,17 +788,17 @@ p { margin: 0 0 1em; }
 .hero-proof ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 26px; }
 .hero-proof li { font-family: var(--font-display); text-transform: uppercase; font-size: 1.15rem; letter-spacing: 0.01em; }
 
-/* Background motif: the V from the Y in the WYN logo (vector), one per section.
-   Sized so its bottom always sits below the section, so only the V edges show. */
+/* Background motif: the top of the Y in the WYN logo, cut at the tip of its inner V (vector).
+   It spans the full height of the section, so the inner V ends exactly on the section's bottom edge. */
 .blobs span:nth-child(1) {
   display: block;
   border-radius: 0;
   left: auto;
   width: auto;
-  height: 150%;
-  aspect-ratio: 158 / 102;
-  top: -8%;
-  right: -30%;
+  height: 100%;
+  aspect-ratio: 158 / 78;
+  top: 0;
+  right: -22%;
   opacity: 0.5;
   background: var(--red-soft);
   -webkit-mask: url("/assets/img/wyn-v.svg") top / 100% 100% no-repeat;
@@ -806,9 +806,9 @@ p { margin: 0 0 1em; }
   animation: v-drift 30s ease-in-out infinite alternate;
 }
 .blobs span:nth-child(2) { display: none; }
-@keyframes v-drift { from { transform: translate(0, 0); } to { transform: translate(-4vw, 2%); } }
+@keyframes v-drift { from { transform: translateX(0); } to { transform: translateX(-5vw); } }
 @media (max-width: 760px) {
-  .blobs span:nth-child(1) { height: 120%; right: -95%; top: -4%; opacity: 0.4; }
+  .blobs span:nth-child(1) { right: -90%; opacity: 0.4; }
 }
 @media (prefers-reduced-motion: reduce) {
   .blobs span:nth-child(n) { animation: none; }

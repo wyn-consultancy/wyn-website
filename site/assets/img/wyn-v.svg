@@ -1,8 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 158 102" preserveAspectRatio="none">
-  <!-- The top "V" of the Y from the WYN logo (stem removed), traced from the original artwork -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 158 78" preserveAspectRatio="none">
+  <!-- The top of the Y from the WYN logo, cut at the tip of its inner V (traced from the original artwork) -->
   <mask id="cut">
-    <rect width="158" height="102" fill="#fff"/>
+    <rect width="158" height="78" fill="#fff"/>
     <polyline points="44,20 79.5,76.8 115,20" fill="none" stroke="#000" stroke-width="2.2"/>
   </mask>
-  <path d="M0 0H158L95 102H62Z" fill="#fff" mask="url(#cut)"/>
+  <path d="M0 0H158L110.5 78H47.5Z" fill="#fff" mask="url(#cut)"/>
 </svg>
