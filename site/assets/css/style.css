@@ -841,3 +841,5 @@ p { margin: 0 0 1em; }
     padding: 14px 24px; border: 1px solid var(--off-white); align-self: flex-start; margin-top: 12px;
   }
 }
+
+[hidden] { display: none !important; }
