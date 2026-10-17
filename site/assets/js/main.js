@@ -8,6 +8,8 @@ const SETTINGS = {
   // Form service URLs (e.g. Formspree). Empty = forms open a pre-filled email instead.
   contactEndpoint: 'https://formspree.io/f/xqpewjgv',
   newsletterEndpoint: 'https://formspree.io/f/xyeklvlg',
+  // Substack publication. Set = the footer sign-up opens Substack's subscribe page with the email filled in.
+  substackUrl: 'https://wynconsultancy.substack.com',
   // Tracking. Each only loads after the visitor accepts cookies. Empty = off, and no banner.
   ga4Id: 'G-KZLNQTWZ6S',        // Google Analytics 4 measurement ID, e.g. 'G-ABC123XYZ'
   metaPixelId: '1665031928662954',  // Meta Pixel / dataset ID, e.g. '123456789012345'
@@ -53,6 +55,11 @@ document.querySelectorAll('form[data-form="newsletter"]').forEach((form) => {
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     const note = form.parentElement.querySelector('.note');
+    if (SETTINGS.substackUrl) {
+      window.open(`${SETTINGS.substackUrl}/subscribe?email=${encodeURIComponent(form.email.value.trim())}`, '_blank', 'noopener');
+      note.textContent = 'Almost done: confirm on the Substack page that just opened.';
+      return;
+    }
     if (!SETTINGS.newsletterEndpoint) {
       mailto('Newsletter sign-up', `Please add ${form.email.value.trim()} to the WYN newsletter.`);
       return;
