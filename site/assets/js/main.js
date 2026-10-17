@@ -198,8 +198,8 @@ window.addEventListener('pageshow', (e) => {
 
 // ---------------------------------------------------------------
 // Cookie consent (UK GDPR / PECR).
-// Nothing non-essential loads until the visitor says yes. "Accept" and "Reject"
-// carry equal weight, and the choice can be changed any time from the footer.
+// Nothing non-essential loads until the visitor says yes. "Accept all" and "Necessary only"
+// carry equal weight (ICO: refusing must be as easy as accepting), and the choice can be changed any time from the footer.
 // The banner only appears once a tracking ID is set in SETTINGS.
 // ---------------------------------------------------------------
 const CONSENT_KEY = 'wyn-consent-v1';
@@ -268,8 +268,8 @@ function showBanner(open = false) {
     </form>
     <div class="cookie-actions">
       <button type="button" class="btn btn--solid" data-c="accept">Accept all</button>
-      <button type="button" class="btn btn--solid" data-c="reject">Reject all</button>
-      <button type="button" class="cookie-manage" data-c="${open ? 'save' : 'manage'}">${open ? 'Save choices' : 'Choose'}</button>
+      <button type="button" class="btn btn--solid" data-c="reject">Necessary only</button>
+      <button type="button" class="cookie-manage" data-c="${open ? 'save' : 'manage'}">${open ? 'Save choices' : 'Manage preferences'}</button>
     </div>`;
   document.body.append(el);
 
