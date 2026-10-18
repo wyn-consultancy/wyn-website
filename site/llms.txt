@@ -13,6 +13,7 @@
 - [Advise](https://wyn-consultancy.com/services/advise/): Opportunity Session £600 (credited against follow-on work); AI Audit & Roadmap from £2,500; tool selection; Fractional AI Lead from £1,800 a month
 - [Train](https://wyn-consultancy.com/services/train/): team workshops for up to 12 people, half day from £1,500, full day from £2,750; upskilling programmes and talks on enquiry
 - [Build](https://wyn-consultancy.com/services/build/): AI newsrooms, content analytics engines, AI workflows and automations, internal tools, campaign experiences and websites; automations and tools from £3,500
+- [Built for us](https://wyn-consultancy.com/built-for-us/): how WYN runs its own content newsroom, with AI agents handling each step and people approving everything; quality, accuracy, security and cost guardrails
 
 ## About
 
