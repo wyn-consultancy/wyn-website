@@ -843,3 +843,15 @@ p { margin: 0 0 1em; }
 }
 
 [hidden] { display: none !important; }
+
+/* Home: "Built for us" proof band, a compact version of the newsroom pipeline */
+.proof-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
+.proof-band h2 { font-size: clamp(2rem, 3.6vw, 3rem); margin-bottom: .4em; }
+.proof-band p { max-width: 560px; }
+.proof-steps { list-style: none; counter-reset: s; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.proof-steps li { counter-increment: s; display: flex; align-items: baseline; gap: 12px; padding: 14px 16px; background: rgba(13,13,13,.22);
+  font-family: var(--font-display); text-transform: uppercase; font-size: 1.25rem; line-height: 1; }
+.proof-steps li::before { content: counter(s, decimal-leading-zero); font-family: var(--font-body); font-size: 12px; letter-spacing: .12em; opacity: .7; }
+.proof-steps li.human { background: var(--peach); color: var(--black); }
+.proof-steps li small { margin-left: auto; font-family: var(--font-body); font-size: 11px; font-weight: 700; letter-spacing: .14em; color: var(--red); }
+@media (max-width: 860px) { .proof-grid { grid-template-columns: 1fr; } }
