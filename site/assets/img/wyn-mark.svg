@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 158 137">
+  <!-- The WYN section mark: an inverted triangle with a bold W cut through it (chosen by Jules, 29 Oct 2026) -->
+  <mask id="cut">
+    <rect width="158" height="137" fill="#fff"/>
+    <polyline points="20,-2 55,84 79,10 103,84 138,-2" fill="none" stroke="#000" stroke-width="12" stroke-linejoin="miter" stroke-miterlimit="10"/>
+  </mask>
+  <path d="M0 0H158L79 137Z" fill="#fff" mask="url(#cut)"/>
+</svg>
