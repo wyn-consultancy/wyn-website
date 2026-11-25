@@ -1,4 +1,7 @@
 # Publishes the site/ folder to GitHub Pages on every push to main.
+# Build and deploy are separate jobs (GitHub's recommended layout): deploying in the same job
+# straight after the upload sometimes failed with "No artifacts named github-pages were found"
+# because the artifact wasn't registered yet (6, 24 and 25 Nov 2026).
 name: Deploy site
 
 on:
@@ -13,19 +16,24 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - id: deployment
         uses: actions/deploy-pages@v4
